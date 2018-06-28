@@ -1,0 +1,17 @@
+{
+  "name": "canberra-weather",
+  "version": "0.1",
+  "description": "A Node project that gets weather data from Australian BoM for Canberra and surrounds, and displays the information using Elecron.",
+  "main": "index.js",
+  "dependencies": {
+    "bom-api": "^1.0.4"
+  },
+  "devDependencies": {
+    "electron": "^2.0.3"
+  },
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "A. Burt",
+  "license": "MIT"
+}

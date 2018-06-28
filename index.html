@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <title>Canberra Weather</title>
+   </head>
+   <body>
+      <select id="siteSelector" style="width: 100%"></select>
+      <h1 id="temp">Temperature</h1>
+      <p id="recent">Correct as of</p>
+      <script>
+         const {ipcRenderer} = require('electron');
+         var siteSelector = document.getElementById("siteSelector");
+         siteSelector.addEventListener("change", newLocation);
+         var tempDisplay = document.getElementById("temp");
+         var recentDisplay = document.getElementById("recent");
+
+         ipcRenderer.on('sites', (event, names) => {
+            for (var i = 0; i < names.length; i++) {
+               siteSelector.options[siteSelector.options.length] = new Option(names[i], names[i]);
+            }
+         });
+
+         ipcRenderer.on('update', (event, data) => {
+            tempDisplay.innerHTML = data.air_temp + "\xB0C";
+            tempDisplay.style.color = "rgb(" + map(data.air_temp, -10, 50, 0, 255) + ",0," + map(data.air_temp, -10, 50, 255, 0) + ")";
+            recentDisplay.innerHTML = data.recency;
+         });
+
+         function newLocation() {
+            var location = siteSelector.options[siteSelector.selectedIndex].value;
+            ipcRenderer.send("locationChange", location);
+         }
+
+         function map (value, o_min, o_max, n_min, n_max) {
+            return Math.floor((value - o_min) / (o_max - o_min) * (n_max - n_min) + n_min);
+         }
+
+      </script>
+   </body>
+</html>
